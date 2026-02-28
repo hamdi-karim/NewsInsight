@@ -1,0 +1,19 @@
+services:
+  server:
+    build: ./server
+    expose:
+      - "3001"
+    environment:
+      - PORT=3001
+      - NEWSAPI_KEY=${NEWSAPI_KEY}
+      - GUARDIAN_API_KEY=${GUARDIAN_API_KEY}
+      - NYT_API_KEY=${NYT_API_KEY}
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - server
+    restart: unless-stopped
