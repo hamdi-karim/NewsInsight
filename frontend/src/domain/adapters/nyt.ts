@@ -3,11 +3,13 @@ import { normalizeSummaryText } from './text';
 
 const NYT_IMAGE_BASE = 'https://static01.nyt.com/';
 
-function buildNytImageUrl(multimedia: { url: string }[]): string | undefined {
-  const first = multimedia?.[0]?.url;
-  if (!first) return undefined;
-  if (first.startsWith('http')) return first;
-  return `${NYT_IMAGE_BASE}${first}`;
+function buildNytImageUrl(
+  multimedia?: { default?: { url: string }; thumbnail?: { url: string } }
+): string | undefined {
+  const url = multimedia?.default?.url ?? multimedia?.thumbnail?.url;
+  if (!url) return undefined;
+  if (url.startsWith('http')) return url;
+  return `${NYT_IMAGE_BASE}${url}`;
 }
 
 export function adaptNytArticles(raw: NytRawArticle[]): Article[] {
