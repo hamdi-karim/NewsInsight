@@ -1,4 +1,4 @@
-export type Source = 'newsapi' | 'guardian' | 'nyt';
+export type Source = "newsapi" | "guardian" | "nyt";
 
 // ---- NewsAPI ----
 

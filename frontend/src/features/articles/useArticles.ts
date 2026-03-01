@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Article, ArticleQuery, Source, SourceResult } from '../../domain/types';
+import type {
+  Article,
+  ArticleQuery,
+  NytRawArticle,
+  NytResponse,
+  Source,
+  SourceResult,
+} from '../../domain/types';
 import {
   fetchNewsApiArticles,
   fetchGuardianArticles,
@@ -17,6 +24,11 @@ interface UseArticlesResult {
   sourceResults: SourceResult[];
   isLoading: boolean;
   isError: boolean;
+}
+
+export function normalizeNytDocs(raw: NytResponse): NytRawArticle[] {
+  const docs = raw.response?.docs;
+  return Array.isArray(docs) ? docs : [];
 }
 
 const PROVIDER_PIPELINES: {
@@ -41,7 +53,7 @@ const PROVIDER_PIPELINES: {
     source: 'nyt',
     fetch: async (q) => {
       const raw = await fetchNytArticles(q);
-      return adaptNytArticles(raw.response.docs);
+      return adaptNytArticles(normalizeNytDocs(raw));
     },
   },
 ];

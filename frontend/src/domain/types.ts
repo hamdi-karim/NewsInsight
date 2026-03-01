@@ -78,6 +78,6 @@ export interface NytRawArticle {
 export interface NytResponse {
   status: string;
   response: {
-    docs: NytRawArticle[];
+    docs: NytRawArticle[] | null;
   };
 }

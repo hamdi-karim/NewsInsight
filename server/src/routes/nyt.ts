@@ -1,20 +1,20 @@
-import { Router } from 'express';
-import { config } from '../config.js';
+import { Router } from "express";
+import { config } from "../config.js";
 import {
   buildSearchParams,
   formatProxyError,
   toNytDate,
   validateApiKey,
-} from '../utils/api-helpers.js';
-import type { NytResponse } from '../types/provider-responses.js';
+} from "../utils/api-helpers.js";
+import type { NytResponse } from "../types/provider-responses.js";
 
-const NYT_BASE = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+const NYT_BASE = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
 const router = Router();
 
-router.get('/articles', async (req, res) => {
+router.get("/articles", async (req, res) => {
   try {
-    validateApiKey(config.nytApiKey, 'nyt');
+    validateApiKey(config.nytApiKey, "nyt");
 
     const { q, from, to, category, page } = req.query as Record<
       string,
@@ -33,8 +33,8 @@ router.get('/articles', async (req, res) => {
       end_date: to ? toNytDate(to) : undefined,
       fq,
       page: nytPage,
-      sort: 'newest',
-      'api-key': config.nytApiKey,
+      sort: "newest",
+      "api-key": config.nytApiKey,
     });
 
     const response = await fetch(`${NYT_BASE}?${params}`, {
@@ -53,16 +53,16 @@ router.get('/articles', async (req, res) => {
         `NYT API returned ${response.status}`;
       res
         .status(response.status)
-        .json(formatProxyError('nyt', message, response.status));
+        .json(formatProxyError("nyt", message, response.status));
       return;
     }
 
     const data: NytResponse = await response.json();
     res.json(data);
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    const status = message.includes('aborted') ? 504 : 500;
-    res.status(status).json(formatProxyError('nyt', message));
+    const message = err instanceof Error ? err.message : "Unknown error";
+    const status = message.includes("aborted") ? 504 : 500;
+    res.status(status).json(formatProxyError("nyt", message));
   }
 });
 
