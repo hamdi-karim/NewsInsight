@@ -11,13 +11,13 @@ import type { NytResponse } from "../types/provider-responses.js";
 const NYT_BASE = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
 const NYT_CATEGORY_MAP: Record<string, string> = {
-  business: 'desk:"Business"',
+  business: 'desk:"Business" OR section.name:"Business"',
   entertainment: 'section.name:"Arts" OR desk:("Arts&Leisure", "Culture")',
   environment: 'section.name:"Climate" OR desk:"Climate"',
   health: 'section.name:"Health"',
   politics: 'desk:"Politics" OR section.name:"U.S."',
   science: 'section.name:"Science" OR desk:"Science"',
-  sport: 'section.name:"Sports"',
+  sport: 'section.name:"Sports" OR desk:"Sports"',
   technology: 'desk:"Technology"',
   world: 'section.name:"World" OR desk:"Foreign"',
 };
@@ -37,15 +37,19 @@ router.get("/articles", async (req, res) => {
 
     const fq = category ? NYT_CATEGORY_MAP[category] : undefined;
 
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const nytEndDate = to ? toNytDate(to) : undefined;
+
     const params = buildSearchParams({
       q,
       begin_date: from ? toNytDate(from) : undefined,
-      end_date: to ? toNytDate(to) : undefined,
+      end_date: nytEndDate && nytEndDate < today ? nytEndDate : undefined,
       fq,
       page: nytPage,
-      sort: "newest",
       "api-key": config.nytApiKey,
     });
+
+    console.log('[nyt] GET', `${NYT_BASE}?${params}`);
 
     const response = await fetch(`${NYT_BASE}?${params}`, {
       signal: AbortSignal.timeout(10_000),
@@ -68,6 +72,10 @@ router.get("/articles", async (req, res) => {
     }
 
     const data: NytResponse = await response.json();
+    if (!data.response.docs) {
+      data.response.docs = [];
+    }
+    console.log('[nyt] status=%d docs=%d', response.status, data.response.docs.length);
     res.json(data);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";

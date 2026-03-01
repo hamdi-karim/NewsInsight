@@ -48,7 +48,10 @@ export interface NytRawArticle {
   headline: { main: string };
   abstract?: string;
   web_url: string;
-  multimedia: { url: string }[];
+  multimedia?: {
+    default?: { url: string };
+    thumbnail?: { url: string };
+  };
   pub_date: string;
   byline?: { original?: string };
   section_name?: string;
