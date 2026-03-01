@@ -1,14 +1,28 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ArticleQuery } from '../domain/types';
+import { usePreferences } from '../features/preferences/PreferencesContext';
+import { buildQueryFromPreferences } from '../features/preferences/types';
 import { useArticles } from '../features/articles/useArticles';
 import ArticleFeed from '../features/articles/ArticleFeed';
 import FilterPanel from '../features/filters/FilterPanel';
 import SearchInput from '../features/filters/SearchInput';
-
-const INITIAL_QUERY: ArticleQuery = {};
+import { loadSessionQuery, saveSessionQuery, clearSessionQuery } from '../features/filters/sessionQuery';
 
 export default function HomePage() {
-  const [query, setQuery] = useState<ArticleQuery>(INITIAL_QUERY);
+  const { preferences } = usePreferences();
+  const [query, setQuery] = useState<ArticleQuery>(
+    () => loadSessionQuery() ?? buildQueryFromPreferences(preferences),
+  );
+
+  const [prevPrefs, setPrevPrefs] = useState(preferences);
+  if (prevPrefs !== preferences) {
+    setPrevPrefs(preferences);
+    setQuery(buildQueryFromPreferences(preferences));
+  }
+
+  useEffect(() => {
+    saveSessionQuery(query);
+  }, [query]);
 
   const handleQueryChange = useCallback(
     (patch: Partial<ArticleQuery>) =>
@@ -16,7 +30,10 @@ export default function HomePage() {
     [],
   );
 
-  const handleReset = useCallback(() => setQuery(INITIAL_QUERY), []);
+  const handleReset = useCallback(() => {
+    clearSessionQuery();
+    setQuery({});
+  }, []);
 
   const { articles, sourceResults, isLoading } = useArticles(query);
 

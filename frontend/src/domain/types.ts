@@ -21,6 +21,8 @@ export interface ArticleQuery {
   page?: number;
 }
 
+export type { Preferences } from '../features/preferences/types';
+
 export type SourceResult =
   | { source: Source; status: 'success'; articles: Article[] }
   | { source: Source; status: 'error'; error: string };
