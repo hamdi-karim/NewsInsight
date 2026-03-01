@@ -76,7 +76,7 @@ export function useArticles(query: ArticleQuery): UseArticlesResult {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['articles', query],
     queryFn: () => fetchAllArticles(query),
-    enabled: Boolean(query.q),
+    staleTime: 5 * 60 * 1000,
   });
 
   return {
