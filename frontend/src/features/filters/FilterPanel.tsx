@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import type { Source, ArticleQuery } from '../../domain/types';
-import DateFilter from './DateFilter';
-import CategorySelect from './CategorySelect';
-import SourceCheckboxes from './SourceCheckboxes';
+import { useState } from "react";
+import type { Source, ArticleQuery } from "../../domain/types";
+import DateFilter from "./DateFilter";
+import CategorySelect from "./CategorySelect";
+import SourceCheckboxes from "./SourceCheckboxes";
 
 interface FilterPanelProps {
   query: ArticleQuery;
@@ -11,6 +11,7 @@ interface FilterPanelProps {
 }
 
 const EMPTY_SOURCES: Source[] = [];
+const ALL_SOURCES_COUNT = 3;
 
 export default function FilterPanel({
   query,
@@ -18,23 +19,24 @@ export default function FilterPanel({
   onReset,
 }: FilterPanelProps) {
   const [open, setOpen] = useState(false);
+  const hasPartialSourceFilter =
+    (query.sources?.length ?? 0) > 0 &&
+    (query.sources?.length ?? 0) < ALL_SOURCES_COUNT;
 
   const hasActiveFilters =
-    Boolean(query.from) ||
-    Boolean(query.category) ||
-    (query.sources?.length ?? 0) > 0;
+    Boolean(query.from) || Boolean(query.category) || hasPartialSourceFilter;
 
   const filters = (
     <div className="space-y-5">
       <DateFilter
-        value={query.from ?? ''}
+        value={query.from ?? ""}
         onChange={(date) =>
           onQueryChange({ from: date, to: date, page: undefined })
         }
       />
 
       <CategorySelect
-        value={query.category ?? ''}
+        value={query.category ?? ""}
         onChange={(category) => onQueryChange({ category, page: undefined })}
       />
 
@@ -42,7 +44,7 @@ export default function FilterPanel({
         value={query.sources ?? EMPTY_SOURCES}
         onChange={(sources) =>
           onQueryChange({
-            sources: sources.length > 0 ? sources : undefined,
+            sources: sources.length === 0 ? undefined : sources,
             page: undefined,
           })
         }
@@ -97,7 +99,7 @@ export default function FilterPanel({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={`h-5 w-5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`h-5 w-5 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
             aria-hidden="true"
           >
             <path

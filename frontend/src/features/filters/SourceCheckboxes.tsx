@@ -16,7 +16,10 @@ export default function SourceCheckboxes({
     const next = value.includes(source)
       ? value.filter((s) => s !== source)
       : [...value, source];
-    onChange(next);
+
+    const normalized = next.length === 0 ? [] : next;
+
+    onChange(normalized);
   }
 
   return (
@@ -33,7 +36,7 @@ export default function SourceCheckboxes({
           >
             <input
               type="checkbox"
-              checked={value.length === 0 || value.includes(source)}
+              checked={value.includes(source)}
               onChange={() => toggle(source)}
               className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
