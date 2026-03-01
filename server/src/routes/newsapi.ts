@@ -10,26 +10,42 @@ import type { NewsApiResponse } from '../types/provider-responses.js';
 const NEWSAPI_EVERYTHING = 'https://newsapi.org/v2/everything';
 const NEWSAPI_TOP_HEADLINES = 'https://newsapi.org/v2/top-headlines';
 
+export interface NewsApiRequestInput {
+  q?: string;
+  from?: string;
+  to?: string;
+  page?: string;
+}
+
+export function resolveNewsApiRequest(input: NewsApiRequestInput) {
+  const { q, from, to, page } = input;
+  const hasDateFilter = Boolean(from) || Boolean(to);
+  const useEverything = Boolean(q) || hasDateFilter;
+
+  return {
+    base: useEverything ? NEWSAPI_EVERYTHING : NEWSAPI_TOP_HEADLINES,
+    params: {
+      q: q || (hasDateFilter ? 'news' : undefined),
+      from: useEverything ? from : undefined,
+      to: useEverything ? to : undefined,
+      ...(!useEverything && { country: 'us' }),
+      page,
+      pageSize: 20 as const,
+      language: useEverything ? ('en' as const) : undefined,
+      sortBy: useEverything ? ('publishedAt' as const) : undefined,
+    },
+  };
+}
+
 const router = Router();
 
 router.get('/articles', async (req, res) => {
   try {
     validateApiKey(config.newsApiKey, 'newsapi');
 
-    const { q, from, to, page } = req.query as Record<string, string | undefined>;
-    const hasQuery = Boolean(q);
-    const base = hasQuery ? NEWSAPI_EVERYTHING : NEWSAPI_TOP_HEADLINES;
-
-    const params = buildSearchParams({
-      q,
-      from: hasQuery ? from : undefined,
-      to: hasQuery ? to : undefined,
-      ...(!hasQuery && { country: 'us' }),
-      page,
-      pageSize: 20,
-      language: hasQuery ? 'en' : undefined,
-      sortBy: hasQuery ? 'publishedAt' : undefined,
-    });
+    const input = req.query as Record<string, string | undefined>;
+    const { base, params: rawParams } = resolveNewsApiRequest(input);
+    const params = buildSearchParams(rawParams);
 
     const response = await fetch(`${base}?${params}`, {
       headers: { 'X-Api-Key': config.newsApiKey },
