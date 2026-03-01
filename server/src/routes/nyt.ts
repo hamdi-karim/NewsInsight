@@ -10,6 +10,18 @@ import type { NytResponse } from "../types/provider-responses.js";
 
 const NYT_BASE = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
+const NYT_CATEGORY_MAP: Record<string, string> = {
+  business: 'desk:"Business"',
+  entertainment: 'section.name:"Arts" OR desk:("Arts&Leisure", "Culture")',
+  environment: 'section.name:"Climate" OR desk:"Climate"',
+  health: 'section.name:"Health"',
+  politics: 'desk:"Politics" OR section.name:"U.S."',
+  science: 'section.name:"Science" OR desk:"Science"',
+  sport: 'section.name:"Sports"',
+  technology: 'desk:"Technology"',
+  world: 'section.name:"World" OR desk:"Foreign"',
+};
+
 const router = Router();
 
 router.get("/articles", async (req, res) => {
@@ -23,9 +35,7 @@ router.get("/articles", async (req, res) => {
 
     const nytPage = page ? Math.max(0, Number(page) - 1) : undefined;
 
-    const fq = category
-      ? `section_name:("${category}") OR subsection_name:("${category}")`
-      : undefined;
+    const fq = category ? NYT_CATEGORY_MAP[category] : undefined;
 
     const params = buildSearchParams({
       q,
