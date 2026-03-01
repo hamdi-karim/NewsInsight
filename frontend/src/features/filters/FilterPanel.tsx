@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Source, ArticleQuery } from '../../domain/types';
-import DateRangeFilter from './DateRangeFilter';
+import DateFilter from './DateFilter';
 import CategorySelect from './CategorySelect';
 import SourceCheckboxes from './SourceCheckboxes';
 
@@ -21,16 +21,16 @@ export default function FilterPanel({
 
   const hasActiveFilters =
     Boolean(query.from) ||
-    Boolean(query.to) ||
     Boolean(query.category) ||
     (query.sources?.length ?? 0) > 0;
 
   const filters = (
     <div className="space-y-5">
-      <DateRangeFilter
-        from={query.from ?? ''}
-        to={query.to ?? ''}
-        onChange={({ from, to }) => onQueryChange({ from, to, page: undefined })}
+      <DateFilter
+        value={query.from ?? ''}
+        onChange={(date) =>
+          onQueryChange({ from: date, to: date, page: undefined })
+        }
       />
 
       <CategorySelect

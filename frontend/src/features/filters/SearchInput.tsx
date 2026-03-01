@@ -70,7 +70,7 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
           tabIndex={0}
           aria-label="Clear search (Escape)"
         >
-          x
+          esc
         </kbd>
       )}
     </div>
