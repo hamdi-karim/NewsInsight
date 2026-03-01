@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useDebounce } from "./useDebounce";
+import { useEffect, useRef, useState } from 'react';
+import { useDebounce } from './useDebounce';
 
 interface SearchInputProps {
   value: string;
@@ -22,8 +22,8 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
   }, [debounced, onChange, value]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Escape") {
-      setLocal("");
+    if (e.key === 'Escape') {
+      setLocal('');
       inputRef.current?.blur();
     }
   }
@@ -62,7 +62,7 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
       {local && (
         <kbd
           onClick={() => {
-            setLocal("");
+            setLocal('');
             inputRef.current?.focus();
           }}
           className="absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer select-none rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-400 transition-colors hover:text-gray-600"

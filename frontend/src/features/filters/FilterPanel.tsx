@@ -1,8 +1,8 @@
-import { useState } from "react";
-import type { Source, ArticleQuery } from "../../domain/types";
-import DateFilter from "./DateFilter";
-import CategorySelect from "./CategorySelect";
-import SourceCheckboxes from "./SourceCheckboxes";
+import { useState } from 'react';
+import type { Source, ArticleQuery } from '../../domain/types';
+import DateFilter from './DateFilter';
+import CategorySelect from './CategorySelect';
+import SourceCheckboxes from './SourceCheckboxes';
 
 interface FilterPanelProps {
   query: ArticleQuery;
@@ -29,14 +29,14 @@ export default function FilterPanel({
   const filters = (
     <div className="space-y-5">
       <DateFilter
-        value={query.from ?? ""}
+        value={query.from ?? ''}
         onChange={(date) =>
           onQueryChange({ from: date, to: date, page: undefined })
         }
       />
 
       <CategorySelect
-        value={query.category ?? ""}
+        value={query.category ?? ''}
         onChange={(category) => onQueryChange({ category, page: undefined })}
       />
 
@@ -99,7 +99,7 @@ export default function FilterPanel({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={`h-5 w-5 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+            className={`h-5 w-5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
             aria-hidden="true"
           >
             <path

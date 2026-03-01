@@ -178,6 +178,10 @@ interface ArticleQuery {
 - **Reusability**: Extract a component if used in 2+ places.
 - **Composition**: Prefer `children` prop over complex configuration objects.
 - **Prop Drilling**: Max depth 2 levels. Use Composition or Context otherwise.
+- **Quotations (Project-Wide)**:
+  - Use single quotes for TypeScript/JavaScript strings by default.
+  - Use double quotes only when required (JSON, serialized payload examples, or to avoid escaping apostrophes).
+  - Keep quotation style consistent in docs and examples: code blocks use the same quote style as the target language conventions (JSON must use double quotes).
 - **Types**: 
   - No `any`.
   - Interfaces for object shapes.
