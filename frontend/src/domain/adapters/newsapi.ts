@@ -1,4 +1,5 @@
 import type { Article, NewsApiRawArticle } from '../types';
+import { normalizeSummaryText } from './text';
 
 export function adaptNewsApiArticles(raw: NewsApiRawArticle[]): Article[] {
   return raw
@@ -7,7 +8,7 @@ export function adaptNewsApiArticles(raw: NewsApiRawArticle[]): Article[] {
       id: a.url,
       source: 'newsapi' as const,
       title: a.title,
-      summary: a.description ?? undefined,
+      summary: normalizeSummaryText(a.description),
       url: a.url,
       imageUrl: a.urlToImage ?? undefined,
       publishedAt: a.publishedAt,
