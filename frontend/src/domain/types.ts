@@ -18,13 +18,12 @@ export interface ArticleQuery {
   to?: string;
   category?: string;
   sources?: Source[];
-  page?: number;
 }
 
 export type { Preferences } from '../features/preferences/types';
 
 export type SourceResult =
-  | { source: Source; status: 'success'; articles: Article[] }
+  | { source: Source; status: 'success'; articles: Article[]; total: number }
   | { source: Source; status: 'error'; error: string };
 
 // ------- Raw provider response shapes (used by adapters) -------
@@ -84,5 +83,6 @@ export interface NytResponse {
   status: string;
   response: {
     docs: NytRawArticle[] | null;
+    meta?: { hits: number; offset: number };
   };
 }

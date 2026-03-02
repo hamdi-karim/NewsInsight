@@ -8,6 +8,9 @@ interface ArticleFeedProps {
   sourceResults: SourceResult[];
   isLoading: boolean;
   onRetry?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMore?: () => void;
 }
 
 export default function ArticleFeed({
@@ -15,6 +18,9 @@ export default function ArticleFeed({
   sourceResults,
   isLoading,
   onRetry,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
 }: ArticleFeedProps) {
   if (isLoading) {
     return (
@@ -59,11 +65,60 @@ export default function ArticleFeed({
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+
+          {isFetchingNextPage && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }, (_, i) => (
+                <ArticleCardSkeleton key={`load-more-skeleton-${i}`} />
+              ))}
+            </div>
+          )}
+
+          {hasNextPage && (
+            <div className="flex justify-center pt-2 pb-4">
+              <button
+                type="button"
+                onClick={onLoadMore}
+                disabled={isFetchingNextPage}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isFetchingNextPage ? (
+                  <>
+                    <svg
+                      className="h-4 w-4 animate-spin"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Loading…
+                  </>
+                ) : (
+                  'Load More'
+                )}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

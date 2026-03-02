@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import type {
   Article,
   ArticleQuery,
@@ -19,12 +20,19 @@ import {
 } from '../../domain/adapters';
 import { mergeArticles } from '../../domain/merge';
 
-interface UseArticlesResult {
+const PAGE_SIZE_NEWSAPI = 20;
+const PAGE_SIZE_GUARDIAN = 20;
+const PAGE_SIZE_NYT = 10;
+
+export interface UseArticlesResult {
   articles: Article[];
   sourceResults: SourceResult[];
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
 }
 
 export function normalizeNytDocs(raw: NytResponse): NytRawArticle[] {
@@ -32,48 +40,78 @@ export function normalizeNytDocs(raw: NytResponse): NytRawArticle[] {
   return Array.isArray(docs) ? docs : [];
 }
 
+interface PipelineResult {
+  articles: Article[];
+  total: number;
+}
+
 const PROVIDER_PIPELINES: {
   source: Source;
-  fetch: (q: ArticleQuery) => Promise<Article[]>;
+  pageSize: number;
+  fetch: (q: ArticleQuery, page: number) => Promise<PipelineResult>;
 }[] = [
   {
     source: 'newsapi',
-    fetch: async (q) => {
-      const raw = await fetchNewsApiArticles(q);
-      return adaptNewsApiArticles(raw.articles);
+    pageSize: PAGE_SIZE_NEWSAPI,
+    fetch: async (q, page) => {
+      const raw = await fetchNewsApiArticles(q, page);
+      return {
+        articles: adaptNewsApiArticles(raw.articles),
+        total: raw.totalResults,
+      };
     },
   },
   {
     source: 'guardian',
-    fetch: async (q) => {
-      const raw = await fetchGuardianArticles(q);
-      return adaptGuardianArticles(raw.response.results);
+    pageSize: PAGE_SIZE_GUARDIAN,
+    fetch: async (q, page) => {
+      const raw = await fetchGuardianArticles(q, page);
+      return {
+        articles: adaptGuardianArticles(raw.response.results),
+        total: raw.response.total,
+      };
     },
   },
   {
     source: 'nyt',
-    fetch: async (q) => {
-      const raw = await fetchNytArticles(q);
-      return adaptNytArticles(normalizeNytDocs(raw));
+    pageSize: PAGE_SIZE_NYT,
+    fetch: async (q, page) => {
+      const raw = await fetchNytArticles(q, page);
+      return {
+        articles: adaptNytArticles(normalizeNytDocs(raw)),
+        total: raw.response?.meta?.hits ?? 0,
+      };
     },
   },
 ];
 
+interface PageData {
+  articles: Article[];
+  sourceResults: SourceResult[];
+  page: number;
+}
+
 async function fetchAllArticles(
   query: ArticleQuery,
-): Promise<{ articles: Article[]; sourceResults: SourceResult[] }> {
+  page: number,
+): Promise<PageData> {
   const pipelines = PROVIDER_PIPELINES.filter(
     (p) => !query.sources?.length || query.sources.includes(p.source),
   );
 
   const settled = await Promise.allSettled(
-    pipelines.map((p) => p.fetch(query)),
+    pipelines.map((p) => p.fetch(query, page)),
   );
 
   const sourceResults: SourceResult[] = settled.map((result, i) => {
     const { source } = pipelines[i];
     if (result.status === 'fulfilled') {
-      return { source, status: 'success' as const, articles: result.value };
+      return {
+        source,
+        status: 'success' as const,
+        articles: result.value.articles,
+        total: result.value.total,
+      };
     }
     return {
       source,
@@ -85,23 +123,56 @@ async function fetchAllArticles(
     };
   });
 
-  return { articles: mergeArticles(sourceResults), sourceResults };
+  return { articles: mergeArticles(sourceResults), sourceResults, page };
+}
+
+function hasMorePages(sourceResults: SourceResult[], page: number): boolean {
+  return sourceResults.some((r) => {
+    if (r.status !== 'success') return false;
+    const pipeline = PROVIDER_PIPELINES.find((p) => p.source === r.source);
+    if (!pipeline) return false;
+    return r.total > page * pipeline.pageSize;
+  });
 }
 
 export function useArticles(query: ArticleQuery): UseArticlesResult {
-  const { data, isLoading, isError, refetch } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['articles', query],
-    queryFn: () => fetchAllArticles(query),
+    queryFn: ({ pageParam }) => fetchAllArticles(query, pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      hasMorePages(lastPage.sourceResults, lastPage.page)
+        ? lastPage.page + 1
+        : undefined,
     staleTime: 5 * 60 * 1000,
   });
 
+  const articles = useMemo(() => {
+    if (!data) return [];
+    const all = data.pages.flatMap((p) => p.articles);
+    return mergeArticles(
+      [{ source: 'newsapi', status: 'success' as const, articles: all, total: all.length }],
+    );
+  }, [data]);
+
+  const sourceResults = data?.pages[data.pages.length - 1]?.sourceResults ?? [];
+
   return {
-    articles: data?.articles ?? [],
-    sourceResults: data?.sourceResults ?? [],
+    articles,
+    sourceResults,
     isLoading,
     isError,
-    refetch: () => {
-      refetch();
-    },
+    refetch: () => { refetch(); },
+    fetchNextPage: () => { fetchNextPage(); },
+    hasNextPage: hasNextPage ?? false,
+    isFetchingNextPage,
   };
 }

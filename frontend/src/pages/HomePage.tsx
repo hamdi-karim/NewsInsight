@@ -39,7 +39,15 @@ export default function HomePage() {
     setQuery({});
   }, []);
 
-  const { articles, sourceResults, isLoading, refetch } = useArticles(query);
+  const {
+    articles,
+    sourceResults,
+    isLoading,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useArticles(query);
 
   return (
     <main className="flex-1 px-4 py-6 md:px-8">
@@ -56,9 +64,7 @@ export default function HomePage() {
           <div className="mb-6">
             <SearchInput
               value={query.q ?? ''}
-              onChange={(q) =>
-                handleQueryChange({ q: q || undefined, page: undefined })
-              }
+              onChange={(q) => handleQueryChange({ q: q || undefined })}
             />
           </div>
 
@@ -67,6 +73,9 @@ export default function HomePage() {
             sourceResults={sourceResults}
             isLoading={isLoading}
             onRetry={refetch}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            onLoadMore={fetchNextPage}
           />
         </div>
       </div>

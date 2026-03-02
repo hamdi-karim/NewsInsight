@@ -61,5 +61,6 @@ export interface NytResponse {
   status: string;
   response: {
     docs: NytRawArticle[];
+    meta?: { hits: number; offset: number };
   };
 }

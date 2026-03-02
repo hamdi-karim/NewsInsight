@@ -100,6 +100,7 @@ describe('mergeArticles', () => {
       {
         source: 'newsapi',
         status: 'success',
+        total: 1,
         articles: [
           makeArticle({
             url: 'https://a.com',
@@ -110,6 +111,7 @@ describe('mergeArticles', () => {
       {
         source: 'guardian',
         status: 'success',
+        total: 1,
         articles: [
           makeArticle({
             url: 'https://b.com',
@@ -129,6 +131,7 @@ describe('mergeArticles', () => {
       {
         source: 'newsapi',
         status: 'success',
+        total: 1,
         articles: [makeArticle({ url: 'https://a.com' })],
       },
       {
@@ -158,6 +161,7 @@ describe('mergeArticles', () => {
       {
         source: 'newsapi',
         status: 'success',
+        total: 2,
         articles: [
           makeArticle({
             url: 'https://dup.com',
@@ -173,6 +177,7 @@ describe('mergeArticles', () => {
       {
         source: 'guardian',
         status: 'success',
+        total: 1,
         articles: [
           makeArticle({
             url: 'https://dup.com',

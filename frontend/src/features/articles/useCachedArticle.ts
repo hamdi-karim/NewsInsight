@@ -1,9 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import type { Article, Source, SourceResult } from '../../domain/types';
 
-interface CachedArticlesData {
+interface PageData {
   articles: Article[];
   sourceResults: SourceResult[];
+  page: number;
 }
 
 const VALID_SOURCES: Set<string> = new Set<Source>([
@@ -20,15 +21,18 @@ export function useCachedArticle(
 
   if (!source || !id || !VALID_SOURCES.has(source)) return undefined;
 
-  const entries = queryClient.getQueriesData<CachedArticlesData>({
+  const entries = queryClient.getQueriesData<InfiniteData<PageData>>({
     queryKey: ['articles'],
   });
 
   for (const [, data] of entries) {
-    const match = data?.articles.find(
-      (a) => a.source === source && a.id === id,
-    );
-    if (match) return match;
+    if (!data?.pages) continue;
+    for (const page of data.pages) {
+      const match = page.articles.find(
+        (a) => a.source === source && a.id === id,
+      );
+      if (match) return match;
+    }
   }
 
   return undefined;
