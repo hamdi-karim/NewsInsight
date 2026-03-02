@@ -31,13 +31,13 @@ export default function FilterPanel({
       <DateFilter
         value={query.from ?? ''}
         onChange={(date) =>
-          onQueryChange({ from: date, to: date, page: undefined })
+          onQueryChange({ from: date, to: date })
         }
       />
 
       <CategorySelect
         value={query.category ?? ''}
-        onChange={(category) => onQueryChange({ category, page: undefined })}
+        onChange={(category) => onQueryChange({ category })}
       />
 
       <SourceCheckboxes
@@ -45,7 +45,6 @@ export default function FilterPanel({
         onChange={(sources) =>
           onQueryChange({
             sources: sources.length === 0 ? undefined : sources,
-            page: undefined,
           })
         }
       />
