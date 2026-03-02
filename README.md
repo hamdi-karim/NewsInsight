@@ -1,5 +1,8 @@
 # NewsInsight
 
+Live Preview: https://newsinsight7.netlify.app/
+
+
 A news aggregator web application that pulls articles from three major sources -- **NewsAPI**, **The Guardian**, and **The New York Times** -- into a single, searchable, filterable, and personalizable feed.
 
 ## Features
