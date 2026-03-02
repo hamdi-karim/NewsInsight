@@ -11,9 +11,11 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
   const debounced = useDebounce(local);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
     setLocal(value);
-  }, [value]);
+  }
 
   useEffect(() => {
     if (debounced !== value) {

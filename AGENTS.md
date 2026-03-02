@@ -182,6 +182,20 @@ interface ArticleQuery {
   - Use single quotes for TypeScript/JavaScript strings by default.
   - Use double quotes only when required (JSON, serialized payload examples, or to avoid escaping apostrophes).
   - Keep quotation style consistent in docs and examples: code blocks use the same quote style as the target language conventions (JSON must use double quotes).
+- **Prop-to-State Sync**: When local state must reset or update in response to a prop change, use the render-time comparison pattern instead of `useEffect`. Store the previous prop value with `useState`, compare during render, and call `setState` synchronously. This avoids an extra render cycle and satisfies `react-hooks` lint rules. Reserve `useEffect` for true side effects (DOM listeners, storage writes, timers).
+  ```typescript
+  // Avoid
+  useEffect(() => {
+    setLocal(value);
+  }, [value]);
+
+  // Preferred
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setLocal(value);
+  }
+  ```
 - **Types**: 
   - No `any`.
   - Interfaces for object shapes.
@@ -201,6 +215,6 @@ interface ArticleQuery {
 
 - **God Components**: Avoid `ArticleList` handling fetching, filtering, AND rendering. Split into `ArticleFeed` (logic) and `ArticleGrid` (ui).
 - **Leaky Abstractions**: Do not use provider-specific fields (e.g., `nyt_id`, `webUrl`) directly in UI components. Always map to `Article` first.
-- **Effect Chains**: Avoid `useEffect` setting state that triggers another `useEffect`. Derive state during render where possible.
+- **Effect Chains**: Avoid `useEffect` setting state that triggers another `useEffect`. Derive state during render where possible. For prop-to-state sync, use the render-time comparison pattern (see Section 7, "Prop-to-State Sync").
 - **Inline Styles**: Use Tailwind classes. Avoid `style={{ ... }}`.
 - **Magic Strings**: Use constants or enums for source names, categories, and API routes.

@@ -26,14 +26,14 @@ interface SourceColorScheme {
 export const SOURCE_COLOR_SCHEMES: Record<Source, SourceColorScheme> = {
   newsapi: {
     active: 'bg-blue-400 text-white',
-    inactive: 'bg-blue-50 text-gray-900',
+    inactive: 'bg-blue-50 text-gray-500',
   },
   guardian: {
-    active: 'bg-yellow-300 text-white',
-    inactive: 'bg-yellow-50 text-gray-900',
+    active: 'bg-yellow-400 text-black-900',
+    inactive: 'bg-yellow-50 text-gray-500',
   },
   nyt: {
     active: 'bg-green-400 text-white',
-    inactive: 'bg-green-50 text-gray-900',
+    inactive: 'bg-green-50 text-gray-500',
   },
 };
