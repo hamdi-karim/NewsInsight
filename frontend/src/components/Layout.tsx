@@ -7,7 +7,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-4 py-4 md:px-8">
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-4 md:px-8">
         <div className="flex items-center justify-between">
           <Link to="/" className="group flex items-center gap-3">
             <img src="/logo.svg" alt="NewsInsight logo" className="h-9 w-9" />
