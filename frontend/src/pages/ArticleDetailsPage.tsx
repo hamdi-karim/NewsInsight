@@ -62,8 +62,8 @@ function ArticleNotFound() {
             Article not found
           </h2>
           <p className="mt-2 text-sm text-gray-500">
-            This article may have expired from cache. Browse the feed to find
-            it again.
+            This article may have expired from cache. Browse the feed to find it
+            again.
           </p>
           <Link
             to="/"

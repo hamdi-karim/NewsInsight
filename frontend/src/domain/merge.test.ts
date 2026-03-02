@@ -15,8 +15,16 @@ function makeArticle(overrides: Partial<Article> = {}): Article {
 
 describe('dedupeByUrl', () => {
   it('removes duplicates sharing the same url, keeps first', () => {
-    const a = makeArticle({ id: '1', url: 'https://example.com/dup', title: 'First' });
-    const b = makeArticle({ id: '2', url: 'https://example.com/dup', title: 'Second' });
+    const a = makeArticle({
+      id: '1',
+      url: 'https://example.com/dup',
+      title: 'First',
+    });
+    const b = makeArticle({
+      id: '2',
+      url: 'https://example.com/dup',
+      title: 'Second',
+    });
     const c = makeArticle({ id: '3', url: 'https://example.com/unique' });
 
     const result = dedupeByUrl([a, b, c]);
@@ -47,9 +55,18 @@ describe('dedupeByUrl', () => {
 
 describe('sortByDate', () => {
   it('sorts articles by publishedAt descending (newest first)', () => {
-    const old = makeArticle({ publishedAt: '2026-01-01T00:00:00Z', title: 'Old' });
-    const mid = makeArticle({ publishedAt: '2026-02-01T00:00:00Z', title: 'Mid' });
-    const recent = makeArticle({ publishedAt: '2026-03-01T00:00:00Z', title: 'Recent' });
+    const old = makeArticle({
+      publishedAt: '2026-01-01T00:00:00Z',
+      title: 'Old',
+    });
+    const mid = makeArticle({
+      publishedAt: '2026-02-01T00:00:00Z',
+      title: 'Mid',
+    });
+    const recent = makeArticle({
+      publishedAt: '2026-03-01T00:00:00Z',
+      title: 'Recent',
+    });
 
     const result = sortByDate([old, recent, mid]);
 
@@ -83,12 +100,22 @@ describe('mergeArticles', () => {
       {
         source: 'newsapi',
         status: 'success',
-        articles: [makeArticle({ url: 'https://a.com', publishedAt: '2026-02-20T00:00:00Z' })],
+        articles: [
+          makeArticle({
+            url: 'https://a.com',
+            publishedAt: '2026-02-20T00:00:00Z',
+          }),
+        ],
       },
       {
         source: 'guardian',
         status: 'success',
-        articles: [makeArticle({ url: 'https://b.com', publishedAt: '2026-02-21T00:00:00Z' })],
+        articles: [
+          makeArticle({
+            url: 'https://b.com',
+            publishedAt: '2026-02-21T00:00:00Z',
+          }),
+        ],
       },
     ];
 
@@ -132,15 +159,26 @@ describe('mergeArticles', () => {
         source: 'newsapi',
         status: 'success',
         articles: [
-          makeArticle({ url: 'https://dup.com', publishedAt: '2026-01-01T00:00:00Z', title: 'NewsAPI' }),
-          makeArticle({ url: 'https://unique.com', publishedAt: '2026-03-01T00:00:00Z' }),
+          makeArticle({
+            url: 'https://dup.com',
+            publishedAt: '2026-01-01T00:00:00Z',
+            title: 'NewsAPI',
+          }),
+          makeArticle({
+            url: 'https://unique.com',
+            publishedAt: '2026-03-01T00:00:00Z',
+          }),
         ],
       },
       {
         source: 'guardian',
         status: 'success',
         articles: [
-          makeArticle({ url: 'https://dup.com', publishedAt: '2026-02-01T00:00:00Z', title: 'Guardian' }),
+          makeArticle({
+            url: 'https://dup.com',
+            publishedAt: '2026-02-01T00:00:00Z',
+            title: 'Guardian',
+          }),
         ],
       },
     ];

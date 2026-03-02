@@ -6,7 +6,11 @@ interface CachedArticlesData {
   sourceResults: SourceResult[];
 }
 
-const VALID_SOURCES: Set<string> = new Set<Source>(['newsapi', 'guardian', 'nyt']);
+const VALID_SOURCES: Set<string> = new Set<Source>([
+  'newsapi',
+  'guardian',
+  'nyt',
+]);
 
 export function useCachedArticle(
   source: string | undefined,

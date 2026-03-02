@@ -1,7 +1,7 @@
-import type { Preferences } from "./types";
-import { DEFAULT_PREFERENCES } from "./types";
+import type { Preferences } from './types';
+import { DEFAULT_PREFERENCES } from './types';
 
-const STORAGE_KEY = "newsinsight-preferences";
+const STORAGE_KEY = 'newsinsight-preferences';
 
 export function loadPreferences(): Preferences {
   try {
@@ -9,7 +9,7 @@ export function loadPreferences(): Preferences {
     if (!raw) return DEFAULT_PREFERENCES;
 
     const parsed: unknown = JSON.parse(raw);
-    if (typeof parsed !== "object" || parsed === null)
+    if (typeof parsed !== 'object' || parsed === null)
       return DEFAULT_PREFERENCES;
 
     const obj = parsed as Record<string, unknown>;
@@ -19,7 +19,7 @@ export function loadPreferences(): Preferences {
         ? obj.sources
         : DEFAULT_PREFERENCES.sources,
       category:
-        typeof obj.category === "string"
+        typeof obj.category === 'string'
           ? obj.category
           : DEFAULT_PREFERENCES.category,
     };

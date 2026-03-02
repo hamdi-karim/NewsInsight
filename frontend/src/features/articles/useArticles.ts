@@ -78,7 +78,10 @@ async function fetchAllArticles(
     return {
       source,
       status: 'error' as const,
-      error: result.reason instanceof Error ? result.reason.message : 'Unknown error',
+      error:
+        result.reason instanceof Error
+          ? result.reason.message
+          : 'Unknown error',
     };
   });
 
@@ -97,6 +100,8 @@ export function useArticles(query: ArticleQuery): UseArticlesResult {
     sourceResults: data?.sourceResults ?? [],
     isLoading,
     isError,
-    refetch: () => { refetch(); },
+    refetch: () => {
+      refetch();
+    },
   };
 }

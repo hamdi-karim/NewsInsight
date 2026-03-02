@@ -18,7 +18,10 @@ export function sortByDate(articles: Article[]): Article[] {
 
 export function mergeArticles(results: SourceResult[]): Article[] {
   const all = results
-    .filter((r): r is Extract<SourceResult, { status: 'success' }> => r.status === 'success')
+    .filter(
+      (r): r is Extract<SourceResult, { status: 'success' }> =>
+        r.status === 'success',
+    )
     .flatMap((r) => r.articles);
 
   return sortByDate(dedupeByUrl(all));

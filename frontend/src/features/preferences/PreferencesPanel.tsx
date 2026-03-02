@@ -12,7 +12,10 @@ interface PreferencesPanelProps {
   onClose: () => void;
 }
 
-export default function PreferencesPanel({ open, onClose }: PreferencesPanelProps) {
+export default function PreferencesPanel({
+  open,
+  onClose,
+}: PreferencesPanelProps) {
   const { preferences, setPreferences } = usePreferences();
   const [draft, setDraft] = useState<Preferences>(preferences);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -64,11 +67,9 @@ export default function PreferencesPanel({ open, onClose }: PreferencesPanelProp
     setDraft(cleared);
   }
 
-  const hasChanges =
-    JSON.stringify(draft) !== JSON.stringify(preferences);
+  const hasChanges = JSON.stringify(draft) !== JSON.stringify(preferences);
 
-  const hasAnyPrefs =
-    draft.sources.length > 0 || draft.category !== '';
+  const hasAnyPrefs = draft.sources.length > 0 || draft.category !== '';
 
   return (
     <div
@@ -112,7 +113,8 @@ export default function PreferencesPanel({ open, onClose }: PreferencesPanelProp
 
         <div className="space-y-6 px-6 py-5">
           <p className="text-sm text-gray-500">
-            Choose your default sources and category. These are applied when the feed loads but can be overridden with filters.
+            Choose your default sources and category. These are applied when the
+            feed loads but can be overridden with filters.
           </p>
 
           <fieldset className="space-y-2">

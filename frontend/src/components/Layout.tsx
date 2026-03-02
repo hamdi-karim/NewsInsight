@@ -11,7 +11,9 @@ export default function Layout() {
         <div className="flex items-center justify-between">
           <Link to="/" className="group">
             <h1 className="text-xl font-bold text-gray-900">NewsInsight</h1>
-            <p className="text-xs text-gray-500">Your personalized news aggregator</p>
+            <p className="text-xs text-gray-500">
+              Your personalized news aggregator
+            </p>
           </Link>
 
           <button

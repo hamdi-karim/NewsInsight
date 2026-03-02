@@ -6,7 +6,11 @@ import { useArticles } from '../features/articles/useArticles';
 import ArticleFeed from '../features/articles/ArticleFeed';
 import FilterPanel from '../features/filters/FilterPanel';
 import SearchInput from '../features/filters/SearchInput';
-import { loadSessionQuery, saveSessionQuery, clearSessionQuery } from '../features/filters/sessionQuery';
+import {
+  loadSessionQuery,
+  saveSessionQuery,
+  clearSessionQuery,
+} from '../features/filters/sessionQuery';
 
 export default function HomePage() {
   const { preferences } = usePreferences();
@@ -52,7 +56,9 @@ export default function HomePage() {
           <div className="mb-6">
             <SearchInput
               value={query.q ?? ''}
-              onChange={(q) => handleQueryChange({ q: q || undefined, page: undefined })}
+              onChange={(q) =>
+                handleQueryChange({ q: q || undefined, page: undefined })
+              }
             />
           </div>
 

@@ -3,9 +3,10 @@ import { normalizeSummaryText } from './text';
 
 const NYT_IMAGE_BASE = 'https://static01.nyt.com/';
 
-function buildNytImageUrl(
-  multimedia?: { default?: { url: string }; thumbnail?: { url: string } }
-): string | undefined {
+function buildNytImageUrl(multimedia?: {
+  default?: { url: string };
+  thumbnail?: { url: string };
+}): string | undefined {
   const url = multimedia?.default?.url ?? multimedia?.thumbnail?.url;
   if (!url) return undefined;
   if (url.startsWith('http')) return url;

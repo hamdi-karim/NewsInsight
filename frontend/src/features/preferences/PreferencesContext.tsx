@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react';
 import type { Preferences } from './types';
 import { DEFAULT_PREFERENCES } from './types';
 import { loadPreferences, savePreferences } from './storage';

@@ -24,7 +24,10 @@ export default function App() {
             <Routes>
               <Route element={<Layout />}>
                 <Route index element={<HomePage />} />
-                <Route path="article/:source/:id" element={<ArticleDetailsPage />} />
+                <Route
+                  path="article/:source/:id"
+                  element={<ArticleDetailsPage />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>

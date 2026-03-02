@@ -19,10 +19,9 @@ async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) {
     const body = await response.json().catch(() => null);
-    const message =
-      (body as Record<string, unknown>)?.error
-        ? String((body as { error: { message?: string } }).error.message)
-        : `Request failed with status ${response.status}`;
+    const message = (body as Record<string, unknown>)?.error
+      ? String((body as { error: { message?: string } }).error.message)
+      : `Request failed with status ${response.status}`;
     throw new Error(message);
   }
   return response.json() as Promise<T>;
@@ -44,10 +43,6 @@ export function fetchGuardianArticles(
   );
 }
 
-export function fetchNytArticles(
-  query: ArticleQuery,
-): Promise<NytResponse> {
-  return fetchJson<NytResponse>(
-    `/api/nyt/articles?${buildQueryString(query)}`,
-  );
+export function fetchNytArticles(query: ArticleQuery): Promise<NytResponse> {
+  return fetchJson<NytResponse>(`/api/nyt/articles?${buildQueryString(query)}`);
 }
