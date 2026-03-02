@@ -11,7 +11,12 @@ function formatDate(iso: string): string {
   });
 }
 
-export default function ArticleCard({ article }: { article: Article }) {
+interface ArticleCardProps {
+  article: Article;
+  className?: string;
+}
+
+export default function ArticleCard({ article, className }: ArticleCardProps) {
   const {
     id,
     source,
@@ -24,7 +29,7 @@ export default function ArticleCard({ article }: { article: Article }) {
   } = article;
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 transition-shadow hover:shadow-md">
+    <article className={`flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 transition-shadow hover:shadow-md ${className ?? ''}`}>
       <Link
         to={`/article/${source}/${encodeURIComponent(id)}`}
         className="block"

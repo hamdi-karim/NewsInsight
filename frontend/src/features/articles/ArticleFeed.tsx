@@ -26,7 +26,7 @@ export default function ArticleFeed({
     return (
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, i) => (
-          <ArticleCardSkeleton key={i} />
+          <ArticleCardSkeleton key={i} className={i === 0 ? 'lg:col-span-2' : ''} />
         ))}
       </div>
     );
@@ -67,8 +67,8 @@ export default function ArticleFeed({
       ) : (
         <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
+            {articles.map((article, index) => (
+              <ArticleCard key={article.id} article={article} className={index === 0 ? 'lg:col-span-2' : ''} />
             ))}
           </div>
 

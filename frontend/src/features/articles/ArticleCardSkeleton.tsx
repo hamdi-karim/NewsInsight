@@ -1,6 +1,6 @@
-export default function ArticleCardSkeleton() {
+export default function ArticleCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 animate-pulse">
+    <div className={`flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 animate-pulse ${className ?? ''}`}>
       <div className="h-48 w-full bg-gray-200" />
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-2 flex gap-2">
