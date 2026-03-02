@@ -95,7 +95,7 @@ export default function PreferencesPanel({ open, onClose }: PreferencesPanelProp
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close settings"
           >
             <svg
@@ -126,7 +126,7 @@ export default function PreferencesPanel({ open, onClose }: PreferencesPanelProp
               {ALL_SOURCES.map((source) => (
                 <label
                   key={source}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-50"
+                  className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors hover:bg-gray-50"
                 >
                   <input
                     type="checkbox"

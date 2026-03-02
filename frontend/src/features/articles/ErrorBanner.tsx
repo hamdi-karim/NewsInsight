@@ -49,7 +49,7 @@ export default function ErrorBanner({
           <button
             type="button"
             onClick={() => dismiss(r.source)}
-            className="shrink-0 rounded p-1 text-amber-500 hover:bg-amber-100 hover:text-amber-700"
+            className="shrink-0 rounded p-2.5 text-amber-500 hover:bg-amber-100 hover:text-amber-700"
             aria-label={`Dismiss ${SOURCE_LABELS[r.source]} error`}
           >
             <svg
