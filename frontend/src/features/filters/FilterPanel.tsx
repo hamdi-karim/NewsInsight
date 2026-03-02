@@ -18,7 +18,7 @@ export default function FilterPanel({
   onQueryChange,
   onReset,
 }: FilterPanelProps) {
-  const [open, setOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const hasPartialSourceFilter =
     (query.sources?.length ?? 0) > 0 &&
     (query.sources?.length ?? 0) < ALL_SOURCES_COUNT;
@@ -67,9 +67,9 @@ export default function FilterPanel({
       <div className="md:hidden">
         <button
           type="button"
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => setMobileFiltersOpen((prev) => !prev)}
           className="mb-4 flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
-          aria-expanded={open}
+          aria-expanded={mobileFiltersOpen}
           aria-controls="mobile-filters"
         >
           <span className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function FilterPanel({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={`h-5 w-5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`h-5 w-5 text-gray-400 transition-transform ${mobileFiltersOpen ? 'rotate-180' : ''}`}
             aria-hidden="true"
           >
             <path
@@ -111,7 +111,7 @@ export default function FilterPanel({
 
         <div
           id="mobile-filters"
-          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${mobileFiltersOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
         >
           <div className="overflow-hidden">
             <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
