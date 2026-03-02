@@ -49,7 +49,9 @@ router.get("/articles", async (req, res) => {
       "api-key": config.nytApiKey,
     });
 
-    console.log('[nyt] GET', `${NYT_BASE}?${params}`);
+    const safeParams = new URLSearchParams(params);
+    safeParams.delete('api-key');
+    console.log('[nyt] GET', `${NYT_BASE}?${safeParams}`);
 
     const response = await fetch(`${NYT_BASE}?${params}`, {
       signal: AbortSignal.timeout(10_000),

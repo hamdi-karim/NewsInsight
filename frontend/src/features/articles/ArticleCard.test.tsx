@@ -90,6 +90,6 @@ describe('ArticleCard', () => {
   it('renders with nyt source label', () => {
     const nytArticle: Article = { ...fullArticle, source: 'nyt' };
     renderCard(nytArticle);
-    expect(screen.getByText('NYT')).toBeInTheDocument();
+    expect(screen.getByText('New York Times')).toBeInTheDocument();
   });
 });
