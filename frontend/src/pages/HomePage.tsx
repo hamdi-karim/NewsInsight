@@ -12,11 +12,20 @@ import {
   clearSessionQuery,
 } from '../features/filters/sessionQuery';
 
+const DISPLAY_PAGE_SIZE = 12;
+
 export default function HomePage() {
   const { preferences } = usePreferences();
   const [query, setQuery] = useState<ArticleQuery>(
     () => loadSessionQuery() ?? buildQueryFromPreferences(preferences),
   );
+
+  const [displayCount, setDisplayCount] = useState(DISPLAY_PAGE_SIZE);
+  const [prevQuery, setPrevQuery] = useState(query);
+  if (prevQuery !== query) {
+    setPrevQuery(query);
+    setDisplayCount(DISPLAY_PAGE_SIZE);
+  }
 
   const [prevPrefs, setPrevPrefs] = useState(preferences);
   if (prevPrefs !== preferences) {
@@ -49,6 +58,17 @@ export default function HomePage() {
     isFetchingNextPage,
   } = useArticles(query);
 
+  const visibleArticles = articles.slice(0, displayCount);
+  const hasMoreToShow = displayCount < articles.length || hasNextPage;
+
+  const handleLoadMore = useCallback(() => {
+    const nextCount = displayCount + DISPLAY_PAGE_SIZE;
+    setDisplayCount(nextCount);
+    if (nextCount > articles.length && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [displayCount, articles.length, hasNextPage, fetchNextPage]);
+
   return (
     <main className="flex-1 px-4 py-6 md:px-8">
       <h2 className="mb-6 text-2xl font-bold text-gray-900">Latest News</h2>
@@ -69,13 +89,13 @@ export default function HomePage() {
           </div>
 
           <ArticleFeed
-            articles={articles}
+            articles={visibleArticles}
             sourceResults={sourceResults}
             isLoading={isLoading}
             onRetry={refetch}
-            hasNextPage={hasNextPage}
+            hasNextPage={hasMoreToShow}
             isFetchingNextPage={isFetchingNextPage}
-            onLoadMore={fetchNextPage}
+            onLoadMore={handleLoadMore}
           />
         </div>
       </div>
