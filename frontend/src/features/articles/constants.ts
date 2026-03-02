@@ -3,7 +3,7 @@ import type { Source } from '../../domain/types';
 export const SOURCE_LABELS: Record<Source, string> = {
   newsapi: 'NewsAPI',
   guardian: 'The Guardian',
-  nyt: 'NYT',
+  nyt: 'New York Times',
 };
 
 export const SOURCE_COLORS: Record<Source, string> = {
@@ -16,4 +16,24 @@ export const SOURCE_CARD_BACKGROUNDS: Record<Source, string> = {
   newsapi: 'bg-blue-100',
   guardian: 'bg-yellow-100',
   nyt: 'bg-green-100',
+};
+
+interface SourceColorScheme {
+  active: string;
+  inactive: string;
+}
+
+export const SOURCE_COLOR_SCHEMES: Record<Source, SourceColorScheme> = {
+  newsapi: {
+    active: 'bg-blue-400 text-white',
+    inactive: 'bg-blue-50 text-gray-900',
+  },
+  guardian: {
+    active: 'bg-yellow-300 text-white',
+    inactive: 'bg-yellow-50 text-gray-900',
+  },
+  nyt: {
+    active: 'bg-green-400 text-white',
+    inactive: 'bg-green-50 text-gray-900',
+  },
 };

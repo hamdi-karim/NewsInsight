@@ -1,5 +1,5 @@
 import type { Source } from '../../domain/types';
-import { SOURCE_LABELS, SOURCE_COLORS } from '../articles/constants';
+import { SOURCE_LABELS, SOURCE_COLOR_SCHEMES } from '../articles/constants';
 
 const ALL_SOURCES: Source[] = ['newsapi', 'guardian', 'nyt'];
 
@@ -17,9 +17,7 @@ export default function SourceCheckboxes({
       ? value.filter((s) => s !== source)
       : [...value, source];
 
-    const normalized = next.length === 0 ? [] : next;
-
-    onChange(normalized);
+    onChange(next.length === 0 ? [] : next);
   }
 
   return (
@@ -28,25 +26,23 @@ export default function SourceCheckboxes({
         Sources
       </legend>
 
-      <div className="space-y-1.5">
-        {ALL_SOURCES.map((source) => (
-          <label
-            key={source}
-            className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors hover:bg-gray-50"
-          >
-            <input
-              type="checkbox"
-              checked={value.includes(source)}
-              onChange={() => toggle(source)}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${SOURCE_COLORS[source]}`}
+      <div role="group" className="space-y-1.5">
+        {ALL_SOURCES.map((source) => {
+          const active = value.includes(source);
+          const colors = SOURCE_COLOR_SCHEMES[source];
+
+          return (
+            <button
+              key={source}
+              type="button"
+              aria-pressed={active}
+              onClick={() => toggle(source)}
+              className={`w-full cursor-pointer rounded-xl px-4 py-3 text-left text-sm font-semibold transition-colors hover:brightness-95 ${active ? colors.active : colors.inactive}`}
             >
               {SOURCE_LABELS[source]}
-            </span>
-          </label>
-        ))}
+            </button>
+          );
+        })}
       </div>
     </fieldset>
   );
