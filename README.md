@@ -107,6 +107,13 @@ NewsInsight/
   docker-compose.yml         # Container orchestration
   .env.example               # Environment variable template
   frontend/
+    netlify.toml             # Netlify build config & redirects
+    netlify/
+      functions/             # Serverless functions (Netlify deployment)
+        newsapi.ts
+        guardian.ts
+        nyt.ts
+        _shared/             # Shared helpers for functions
     src/
       components/            # Shared UI atoms (Layout, ErrorBoundary)
       domain/                # Article type, adapters, merge/dedupe/sort
@@ -121,6 +128,34 @@ NewsInsight/
       routes/                # newsapi, guardian, nyt proxy routes
       config.ts              # Environment variable loader
 ```
+
+## Deployment (Netlify)
+
+The app is deployed to [Netlify](https://www.netlify.com/) on the free tier. The frontend SPA is served from Netlify's CDN, and the Express proxy routes run as Netlify Functions (serverless).
+
+### Setup
+
+1. **Connect the repo** in the [Netlify dashboard](https://app.netlify.com/):
+   - Import from GitHub
+   - Set **Base directory** to `frontend`
+   - Build command and publish directory are auto-detected from `netlify.toml`
+
+2. **Add environment variables** in Site settings > Environment variables:
+
+   | Variable | Description |
+   |----------|-------------|
+   | `NEWSAPI_KEY` | NewsAPI API key |
+   | `GUARDIAN_API_KEY` | Guardian API key |
+   | `NYT_API_KEY` | NYT API key |
+
+3. **Deploy** -- Netlify auto-deploys on every push to `main`. Pull requests get preview deployments automatically.
+
+### How it works
+
+- `frontend/netlify.toml` configures the build and redirect rules
+- `frontend/netlify/functions/` contains serverless functions that replace the Express proxy
+- Redirect rules map `/api/newsapi/articles` -> the `newsapi` function (etc.), so the frontend code is unchanged
+- API keys are stored as Netlify environment variables and injected at runtime via `process.env`
 
 ## Trade-offs and Decisions
 

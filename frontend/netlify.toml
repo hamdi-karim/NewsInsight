@@ -1,0 +1,27 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/newsapi/articles"
+  to = "/.netlify/functions/newsapi"
+  status = 200
+
+[[redirects]]
+  from = "/api/guardian/articles"
+  to = "/.netlify/functions/guardian"
+  status = 200
+
+[[redirects]]
+  from = "/api/nyt/articles"
+  to = "/.netlify/functions/nyt"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
