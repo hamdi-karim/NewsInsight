@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ArticleQuery } from '../domain/types';
-import { usePreferences } from '../features/preferences/PreferencesContext';
+import { usePreferences } from '../features/preferences/usePreferences';
 import { buildQueryFromPreferences } from '../features/preferences/types';
 import { useArticles } from '../features/articles/useArticles';
 import ArticleFeed from '../features/articles/ArticleFeed';

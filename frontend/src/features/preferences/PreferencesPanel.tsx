@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Source } from '../../domain/types';
 import type { Preferences } from './types';
-import { usePreferences } from './PreferencesContext';
+import { usePreferences } from './usePreferences';
 import { SOURCE_LABELS, SOURCE_COLORS } from '../articles/constants';
 import { CATEGORY_OPTIONS } from '../filters/constants';
 
@@ -18,11 +18,15 @@ export default function PreferencesPanel({
 }: PreferencesPanelProps) {
   const { preferences, setPreferences } = usePreferences();
   const [draft, setDraft] = useState<Preferences>(preferences);
+  const [prevOpen, setPrevOpen] = useState(open);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (open) setDraft(preferences);
-  }, [open, preferences]);
+  if (open && !prevOpen) {
+    setPrevOpen(true);
+    setDraft(preferences);
+  } else if (!open && prevOpen) {
+    setPrevOpen(false);
+  }
 
   useEffect(() => {
     if (!open) return;
