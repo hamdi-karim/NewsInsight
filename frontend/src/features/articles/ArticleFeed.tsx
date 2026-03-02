@@ -7,12 +7,14 @@ interface ArticleFeedProps {
   articles: Article[];
   sourceResults: SourceResult[];
   isLoading: boolean;
+  onRetry?: () => void;
 }
 
 export default function ArticleFeed({
   articles,
   sourceResults,
   isLoading,
+  onRetry,
 }: ArticleFeedProps) {
   if (isLoading) {
     return (
@@ -46,6 +48,15 @@ export default function ArticleFeed({
           </svg>
           <p className="text-lg font-medium">No articles found</p>
           <p className="mt-1 text-sm">Try adjusting your search or filters.</p>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-4 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Try again
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

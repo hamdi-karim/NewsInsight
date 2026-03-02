@@ -24,6 +24,7 @@ interface UseArticlesResult {
   sourceResults: SourceResult[];
   isLoading: boolean;
   isError: boolean;
+  refetch: () => void;
 }
 
 export function normalizeNytDocs(raw: NytResponse): NytRawArticle[] {
@@ -85,7 +86,7 @@ async function fetchAllArticles(
 }
 
 export function useArticles(query: ArticleQuery): UseArticlesResult {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['articles', query],
     queryFn: () => fetchAllArticles(query),
     staleTime: 5 * 60 * 1000,
@@ -96,5 +97,6 @@ export function useArticles(query: ArticleQuery): UseArticlesResult {
     sourceResults: data?.sourceResults ?? [],
     isLoading,
     isError,
+    refetch: () => { refetch(); },
   };
 }

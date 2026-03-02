@@ -35,7 +35,7 @@ export default function HomePage() {
     setQuery({});
   }, []);
 
-  const { articles, sourceResults, isLoading } = useArticles(query);
+  const { articles, sourceResults, isLoading, refetch } = useArticles(query);
 
   return (
     <main className="flex-1 px-4 py-6 md:px-8">
@@ -60,6 +60,7 @@ export default function HomePage() {
             articles={articles}
             sourceResults={sourceResults}
             isLoading={isLoading}
+            onRetry={refetch}
           />
         </div>
       </div>
