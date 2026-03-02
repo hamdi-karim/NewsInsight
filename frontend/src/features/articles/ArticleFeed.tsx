@@ -68,7 +68,7 @@ export default function ArticleFeed({
         <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
-              <ArticleCard key={article.id} article={article} className={index === 0 ? 'lg:col-span-2' : ''} />
+              <ArticleCard key={article.id} article={article} featured={index === 0} className={index === 0 ? 'lg:col-span-2' : ''} />
             ))}
           </div>
 

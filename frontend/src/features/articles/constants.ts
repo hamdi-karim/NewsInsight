@@ -11,3 +11,9 @@ export const SOURCE_COLORS: Record<Source, string> = {
   guardian: 'bg-yellow-100 text-yellow-800',
   nyt: 'bg-green-100 text-green-800',
 };
+
+export const SOURCE_CARD_BACKGROUNDS: Record<Source, string> = {
+  newsapi: 'bg-blue-100',
+  guardian: 'bg-yellow-100',
+  nyt: 'bg-green-100',
+};

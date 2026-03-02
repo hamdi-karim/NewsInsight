@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import type { Article } from '../../domain/types';
-import { SOURCE_COLORS, SOURCE_LABELS } from './constants';
+import { SOURCE_CARD_BACKGROUNDS, SOURCE_COLORS, SOURCE_LABELS } from './constants';
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -13,10 +13,11 @@ function formatDate(iso: string): string {
 
 interface ArticleCardProps {
   article: Article;
+  featured?: boolean;
   className?: string;
 }
 
-export default function ArticleCard({ article, className }: ArticleCardProps) {
+export default function ArticleCard({ article, featured, className }: ArticleCardProps) {
   const {
     id,
     source,
@@ -28,10 +29,48 @@ export default function ArticleCard({ article, className }: ArticleCardProps) {
     category,
   } = article;
 
+  const articleUrl = `/article/${source}/${encodeURIComponent(id)}`;
+
+  if (featured) {
+    return (
+      <article className={`flex flex-col overflow-hidden rounded-2xl ${SOURCE_CARD_BACKGROUNDS[source]} p-6 ${className ?? ''}`}>
+        <Link to={articleUrl} className="mb-2 text-xl font-bold leading-snug text-gray-900 hover:text-gray-700">
+          {title}
+        </Link>
+
+        {summary && (
+          <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-700">
+            {summary}
+          </p>
+        )}
+
+        <div className="mt-auto flex items-center justify-between text-xs text-gray-600">
+          <div className="flex items-center gap-1">
+            <span className="font-semibold uppercase tracking-wide">{SOURCE_LABELS[source]}</span>
+            {author && (
+              <>
+                <span aria-hidden="true">,</span>
+                <span className="truncate max-w-[160px]">{author}</span>
+              </>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
+            <Link to={articleUrl} aria-label="Read article" className="text-gray-600 hover:text-gray-900">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className={`flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200 transition-shadow hover:shadow-md ${className ?? ''}`}>
       <Link
-        to={`/article/${source}/${encodeURIComponent(id)}`}
+        to={articleUrl}
         className="block"
       >
         {imageUrl ? (
@@ -76,7 +115,7 @@ export default function ArticleCard({ article, className }: ArticleCardProps) {
         </div>
 
         <Link
-          to={`/article/${source}/${encodeURIComponent(id)}`}
+          to={articleUrl}
           className="mb-2 text-base font-semibold leading-snug text-gray-900 hover:text-blue-700"
         >
           {title}
